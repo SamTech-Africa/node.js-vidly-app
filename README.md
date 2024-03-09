@@ -1,2 +1,2 @@
 # Vidly Application
-- Vidly app is an imaginary services for renting out movies.
+- Vidly app is an imaginary service for renting out movies.

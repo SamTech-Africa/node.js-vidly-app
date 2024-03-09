@@ -47,6 +47,34 @@ app.post(vidlyUrl, (req, res) => {
   res.send(genre);
 });
 
+// Put request for genre to update genre
+app.put(vidlyUrlWithId, (req, res) => {
+  const genre = genres.find((gen) => gen.id === parseInt(req.params.id));
+
+  if (!genre)
+    return res.status(404).send(`Course with id: ${req.params.id} not found`);
+
+  const { error } = validateGenre(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  // update genre
+  genre.category = req.body.category;
+  res.send(genre);
+});
+
+// Delete request to delete genre
+app.delete(vidlyUrlWithId, (req, res) => {
+  const genre = genres.find((gen) => gen.id === parseInt(req.params.id));
+
+  if (!genre)
+    return res.status(404).send(`Course with id: ${req.params.id} not found`);
+
+  const index = genres.indexOf(genre);
+  genres.splice(index, 1);
+
+  res.send(genre);
+});
+
 // ALL Functions
 function validateGenre(genre) {
   const schema = Joi.object({

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const customers = require("./routes/customers");
 const genres = require("./routes/genres");
 const express = require("express");
 
@@ -11,6 +12,7 @@ mongoose
 
 app.use(express.json());
 app.use("/api/genres", genres);
+app.use("/api/customers", customers);
 
 // PORT or ROUTE
 const port = process.env.PORT || 5000;

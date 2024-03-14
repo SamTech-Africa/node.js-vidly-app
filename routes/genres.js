@@ -1,6 +1,19 @@
+const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
 const Joi = require("joi");
+
+// Create Schema
+const genreShema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    minLength: 5,
+    maxLength: 50,
+  },
+});
+
+const 
 
 const genres = [
   { id: 1, category: "Action" },

@@ -1,4 +1,4 @@
-const { Genre, validate } = require("../models/genres");
+const { Genre, validate } = require("../models/genre");
 const express = require("express");
 const router = express.Router();
 const Joi = require("joi");

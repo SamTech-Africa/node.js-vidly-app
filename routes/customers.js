@@ -54,7 +54,7 @@ router.put("/:id", async (req, res) => {
   if (!customer)
     return res
       .status(404)
-      .send(`Customer with name ${req.body.name} is not available`);
+      .send(`Customer with name ${req.body.name} is not available.`);
 
   res.send(customer);
 });
@@ -65,7 +65,7 @@ router.delete("/:id", async (req, res) => {
   if (!customer)
     return res
       .status(404)
-      .send(`Customer with name ${req.body.name} is not available`);
+      .send(`Customer with name ${req.body.name} is not available.`);
 
   res.send(customer);
 });

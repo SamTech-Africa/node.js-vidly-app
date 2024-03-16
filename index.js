@@ -1,3 +1,4 @@
+const error = require("./middleware/error");
 const config = require("config");
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
@@ -29,6 +30,9 @@ app.use("/api/movies", movies);
 app.use("/api/rentals", rentals);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
+
+// Express error middleware functions
+app.use(error);
 
 // PORT or ROUTE
 const port = process.env.PORT || 5000;

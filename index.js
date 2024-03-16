@@ -1,6 +1,6 @@
 require("express-async-errors");
 const winston = require("winston");
-equire("winston-mongodb");
+require("winston-mongodb");
 const error = require("./middleware/error");
 const config = require("config");
 const Joi = require("joi");
@@ -14,10 +14,42 @@ const rentals = require("./routes/rentals");
 const express = require("express");
 const auth = require("./routes/auth");
 
+const url = "mongodb://localhost/vidly";
+
 const app = express();
 
-// winston.add(winston.transports.File, { filename: "logfile.log" });
-winston.add(winston.transports.MongoDB, { db: "mongodb://localhost/vidly" });
+process.on("uncaughtException", (exception) => {
+  winston.error(exception.message, exception);
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (exception) => {
+  winston.error(exception.message, exception);
+  process.exit(1);
+});
+
+winston.handleExceptions(
+  new winston.transports.File({ filename: "uncaughtExceptions.log" })
+);
+
+winston.add(
+  new winston.transports.File({
+    filename: "logfile.log",
+    handleExceptions: true,
+  })
+);
+
+winston.add(
+  new winston.transports.MongoDB({
+    db: url,
+    level: "info",
+  })
+);
+
+const promise = Promise.reject(
+  new Error("Couldn't connect to MongoDB while connecting")
+);
+promise.then(() => console.log("Done"));
 
 if (!config.get("jwtPrivateKey")) {
   console.log("FATAL ERROR: jwtPrivateKey IS NOT defined");
@@ -25,7 +57,7 @@ if (!config.get("jwtPrivateKey")) {
 }
 
 mongoose
-  .connect("mongodb://localhost/vidly")
+  .connect(url)
   .then(() => console.log("Connected to MongoDB..."))
   .catch((err) => console.error("Could not connect to MongoDB...", err));
 

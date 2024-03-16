@@ -1,3 +1,5 @@
+// export middleware
+const auth = require("../middleware/auth");
 const { Genre, validate } = require("../models/genre");
 const express = require("express");
 const router = express.Router();
@@ -20,7 +22,8 @@ router.get("/:id", async (req, res) => {
 });
 
 // Post request for genre
-router.post("/", async (req, res) => {
+//post method --> post(route, middleware, async function)
+router.post("/", auth, async (req, res) => {
   const { error } = validate(req.body);
 
   if (error) {

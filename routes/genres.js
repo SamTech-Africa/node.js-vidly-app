@@ -1,5 +1,6 @@
 // export middleware
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const { Genre, validate } = require("../models/genre");
 const express = require("express");
 const router = express.Router();
@@ -55,7 +56,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // Delete request to delete genre
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   const genre = await Genre.findByIdAndDelete(req.params.id);
 
   if (!genre)

@@ -1,31 +1,21 @@
 require("express-async-errors");
 const winston = require("winston");
 require("winston-mongodb");
-const error = require("./middleware/error");
+
 const config = require("config");
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 const mongoose = require("mongoose");
-const users = require("./routes/users");
-const genres = require("./routes/genres");
-const customers = require("./routes/customers");
-const movies = require("./routes/movies");
-const rentals = require("./routes/rentals");
+
 const express = require("express");
-const auth = require("./routes/auth");
 
 const url = "mongodb://localhost/vidly";
 
 const app = express();
-
-process.on("uncaughtException", (exception) => {
-  winston.error(exception.message, exception);
-  process.exit(1);
-});
+require("./startup/routes")(app);
 
 process.on("unhandledRejection", (exception) => {
-  winston.error(exception.message, exception);
-  process.exit(1);
+  throw exception;
 });
 
 winston.handleExceptions(
@@ -56,19 +46,6 @@ if (!config.get("jwtPrivateKey")) {
   process.exit(1);
 }
 
-mongoose
-  .connect(url)
-  .then(() => console.log("Connected to MongoDB..."))
-  .catch((err) => console.error("Could not connect to MongoDB...", err));
-
-app.use(express.json());
-app.use("/api/genres", genres);
-app.use("/api/customers", customers);
-app.use("/api/movies", movies);
-app.use("/api/rentals", rentals);
-app.use("/api/users", users);
-app.use("/api/auth", auth);
-app.use(error);
 // Express error middleware functions
 
 // PORT or ROUTE

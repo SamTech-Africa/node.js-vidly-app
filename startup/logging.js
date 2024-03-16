@@ -1,32 +1,20 @@
-require("winston-mongodb");
 const winston = require("winston");
+require("winston-mongodb");
 require("express-async-errors");
+const config = require("config");
 
 module.exports = function () {
-  process.on("unhandledRejection", (exception) => {
-    throw exception;
-  });
-
   winston.handleExceptions(
     new winston.transports.File({ filename: "uncaughtExceptions.log" })
   );
 
-  winston.add(
-    new winston.transports.File({
-      filename: "logfile.log",
-      handleExceptions: true,
-    })
-  );
+  process.on("unhandledRejection", (ex) => {
+    throw ex;
+  });
 
-  winston.add(
-    new winston.transports.MongoDB({
-      db: "mongodb://localhost/vidly",
-      level: "info",
-    })
-  );
-
-  const promise = Promise.reject(
-    new Error("Couldn't connect to MongoDB while connecting")
-  );
-  promise.then(() => console.log("Done"));
+  winston.add(winston.transports.File, { filename: "logfile.log" });
+  winston.add(winston.transports.MongoDB, {
+    db: config.get("db_url"),
+    level: "info",
+  });
 };
